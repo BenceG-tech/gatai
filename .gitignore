@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.output/
+.nitro/
+.tanstack/
+.vinxi/
+.vercel/
+.netlify/
+build/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs and caches
+*.log
+npm-debug.log*
+bun-debug.log*
+.eslintcache
+.vite/
+coverage/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Playwright artefacts
+test-results/
+playwright-report/
