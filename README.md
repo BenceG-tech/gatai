@@ -22,3 +22,7 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Docs
+
+- [Neural logo hero and motion system](docs/neural-logo.md)
