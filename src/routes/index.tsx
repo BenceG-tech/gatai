@@ -6,6 +6,9 @@ import { SelectedWork } from "@/components/site/SelectedWork";
 import { NeuralSphere } from "@/components/site/NeuralSphereSection";
 import { NodeIcon, SERVICE_ICONS } from "@/components/effects/NodeIcon";
 import { NeuralMesh } from "@/components/effects/NeuralMesh";
+import { NeuralThread } from "@/components/effects/NeuralThread";
+import { ImagineDay } from "@/components/site/ImagineDay";
+import { IdeaToSystem } from "@/components/site/IdeaToSystem";
 import {
   Counter,
   Ink,
@@ -54,10 +57,14 @@ const MARQUEE = [
 function Services() {
   const grid = useSpotlightGroup<HTMLUListElement>();
   return (
-    <section className="section" aria-labelledby="services-title">
+    <section
+      className="section"
+      data-formation="grid"
+      aria-labelledby="services-title"
+    >
       <div className="grid gap-8 md:grid-cols-12 md:items-end">
         <div className="md:col-span-7">
-          <Eyebrow n="02">Képességek</Eyebrow>
+          <Eyebrow n="03">Képességek</Eyebrow>
           <RevealWords
             as="h2"
             text={"Hat terület,\negy működő rendszer."}
@@ -124,10 +131,14 @@ function NeuralCore() {
     { value: 1, label: "felelős kapcsolattartó" },
   ];
   return (
-    <section className="section neural-core" aria-labelledby="core-title">
+    <section
+      className="section neural-core"
+      data-formation="sphere"
+      aria-labelledby="core-title"
+    >
       <div className="grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <Eyebrow n="03">Neurális mag</Eyebrow>
+          <Eyebrow n="05">Neurális mag</Eyebrow>
           <RevealWords
             as="h2"
             text={"Rendszerek, amelyek\nhelyetted dolgoznak."}
@@ -168,8 +179,12 @@ function NeuralCore() {
 
 function Process() {
   return (
-    <section className="section" aria-labelledby="process-title">
-      <Eyebrow n="06">Hogyan dolgozom</Eyebrow>
+    <section
+      className="section"
+      data-formation="line"
+      aria-labelledby="process-title"
+    >
+      <Eyebrow n="08">Hogyan dolgozom</Eyebrow>
       <RevealWords
         as="h2"
         text={"Öt lépés, egy\nfolyamatos impulzus."}
@@ -194,9 +209,14 @@ function Process() {
 function Home() {
   return (
     <>
+      <NeuralThread />
       <NeuralHero />
-      <div className="relative z-10 bg-background">
-        <section id="studio-intro" className="section intro">
+      <div className="home-flow">
+        <section
+          id="studio-intro"
+          className="section intro"
+          data-formation="drift"
+        >
           <div className="grid gap-10 md:grid-cols-12 md:items-end">
             <div className="md:col-span-7">
               <Eyebrow n="01">Gátai Bence független digitális stúdiója</Eyebrow>
@@ -210,7 +230,8 @@ function Home() {
             <div className="md:col-span-5">
               <p className="reveal text-lg text-muted-foreground">
                 Weboldalakat, alkalmazásokat és intelligens rendszereket
-                tervezek és építek — a vállalkozásod működésére szabva.
+                tervezek és építek — azokat is, amelyekről még nem tudod, hogy
+                szükséged van rájuk.
               </p>
               <div className="reveal mt-8 flex flex-wrap gap-3">
                 <MagneticLink to="/kapcsolat">Projekt indítása</MagneticLink>
@@ -230,14 +251,23 @@ function Home() {
         </section>
 
         <Marquee items={MARQUEE} />
-        <SynapseDivider label="02 — Képességek" />
+        <ImagineDay />
+
+        <SynapseDivider label="03 — Képességek" />
         <Services />
 
-        <SynapseDivider label="03 — Neurális mag" pulses={3} />
+        <SynapseDivider label="04 — Ötlet → rendszer" pulses={3} />
+        <IdeaToSystem />
+
+        <SynapseDivider label="05 — Neurális mag" pulses={3} />
         <NeuralCore />
 
-        <section className="section pt-0" aria-labelledby="ai-title">
-          <Eyebrow n="04">AI a gyakorlatban</Eyebrow>
+        <section
+          className="section pt-0"
+          data-formation="flow"
+          aria-labelledby="ai-title"
+        >
+          <Eyebrow n="06">AI a gyakorlatban</Eyebrow>
           <h2
             id="ai-title"
             className="section-title reveal mt-8 mb-14 max-w-4xl"
@@ -248,13 +278,19 @@ function Home() {
           <AIShowcase />
         </section>
 
-        <SynapseDivider label="05 — Munkák" />
-        <SelectedWork n="05" />
+        <SynapseDivider label="07 — Munkák" />
+        <div data-formation="constellation">
+          <SelectedWork n="07" />
+        </div>
 
-        <SynapseDivider label="06 — Folyamat" />
+        <SynapseDivider label="08 — Folyamat" />
         <Process />
 
-        <section className="section" aria-labelledby="founder-title">
+        <section
+          className="section"
+          data-formation="drift"
+          aria-labelledby="founder-title"
+        >
           <div className="grid gap-16 md:grid-cols-12">
             <div className="md:col-span-5">
               <div className="reveal border-t pt-8 md:sticky md:top-28">
@@ -275,7 +311,7 @@ function Home() {
               </div>
             </div>
             <div className="md:col-span-6 md:col-start-7">
-              <Eyebrow n="07">Az alapító</Eyebrow>
+              <Eyebrow n="09">Az alapító</Eyebrow>
               <RevealWords
                 as="h2"
                 text="I build the brain behind the business."
@@ -318,7 +354,11 @@ function Home() {
           </div>
         </section>
 
-        <section className="final-cta" aria-labelledby="cta-title">
+        <section
+          className="final-cta"
+          data-formation="converge"
+          aria-labelledby="cta-title"
+        >
           <NeuralMesh
             className="final-cta__mesh"
             label="Neurális háló, amely a kurzorhoz kapcsolódik"
@@ -332,6 +372,10 @@ function Home() {
               accent={["rendkívülit"]}
               className="display-title mx-auto mt-8 max-w-5xl"
             />
+            <p className="reveal mx-auto mt-8 max-w-xl text-lg text-muted-foreground">
+              Hozd az ötletet — egy mondatban vagy egy teli füzetben.
+              Megmutatom, mi lehet belőle, és megépítem úgy, hogy működjön.
+            </p>
             <div className="mt-12 flex flex-wrap justify-center gap-3">
               <MagneticLink to="/kapcsolat">
                 Beszéljünk a projektedről

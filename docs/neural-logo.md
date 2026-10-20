@@ -46,6 +46,30 @@ Engine behaviour:
 
 Reduced motion, or the visitor turning motion off (`gatai:motion` in localStorage, `html[data-motion="off"]`), means the engine is never created. The complete static vector logo is shown instead. The OS reduced-motion setting wins, so no toggle is offered in that case. On the server the static logo renders, which keeps SSR safe.
 
+## Continuous home flow
+
+The home page reads as one uninterrupted scroll:
+
+1. **Logo → thread.** `NeuralThread` (`src/components/effects/NeuralThread.tsx`) is one fixed 2D canvas behind the home content. While the pinned hero leaves the screen, its nodes ride on a wordmark-shaped band that moves with the logo. Meanwhile the hero canvas dissolves through a CSS view timeline (`--hero`, `exit 0% → 55%`). The logo visibly turns into the network.
+2. **Thread → sections.** Sections opt in with `data-formation`. The section crossing the middle of the viewport picks the shape, and the same nodes spring into it:
+
+   | Formation       | Section                    |
+   | --------------- | -------------------------- |
+   | `drift`         | intro, idea, founder       |
+   | `flow`          | "Képzeld el", AI           |
+   | `grid`          | services                   |
+   | `sphere`        | halo around the R3F sphere |
+   | `constellation` | work                       |
+   | `line`          | process timeline           |
+   | `converge`      | final CTA                  |
+
+   Layouts are pure and seeded (`src/lib/neural-thread.ts`).
+
+3. **"Képzeld el" (`ImagineDay`).** A pinned, horizontally scrubbed day in the life of a self-running business. It uses pure CSS: the `--imagine` view timeline drives the track, a parallax "24/7" layer and a progress beam. Without support, it falls back to a vertical list.
+4. **"Ötlet → rendszer" (`IdeaToSystem`).** The visitor types or picks an idea. Deterministic keyword matching (`src/lib/idea-system.ts`) wires it into an SVG system map, with CSS dash pulses on active synapses. Suggested modules ("amire még nem gondoltál") breathe in azure. Nothing is sent or stored. The CTA leads to the existing contact flow.
+
+The thread is not rendered with reduced motion or with motion toggled off. It uses fewer nodes on phones, adds cursor links only on fine pointers, and pauses in hidden tabs.
+
 ## Neural sphere (`src/components/three/NeuralSphereScene.tsx`)
 
 The R3F scene is lazy-loaded behind `ClientOnly`, and only once the section is in view. It contains:

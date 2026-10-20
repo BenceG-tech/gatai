@@ -150,6 +150,7 @@ export function NeuralMesh({
         ctx.arc(mouse.x, mouse.y, 3.5, 0, 6.29);
         ctx.fill();
       }
+      const spawned: Impulse[] = [];
       impulses = impulses.filter((q) => {
         q.t += (q.v * dt) / 16;
         const a = nodes[q.a];
@@ -162,7 +163,7 @@ export function NeuralMesh({
               ([i, j]) => (i === q.b || j === q.b) && i !== q.a && j !== q.a,
             );
             if (next)
-              impulses.push({
+              spawned.push({
                 a: q.b,
                 b: next[0] === q.b ? next[1] : next[0],
                 t: 0,
@@ -177,6 +178,7 @@ export function NeuralMesh({
         ctx.fill();
         return true;
       });
+      impulses.push(...spawned);
       for (const n of nodes) {
         n.glow *= 0.94;
         const r = 1.5 + n.glow * 2.4;

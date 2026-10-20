@@ -1748,3 +1748,402 @@ html[data-motion="off"] .node-icon__pulse,
 html[data-motion="off"] .cursor-glow {
   display: none;
 }
+
+/* ---------- Home: continuous neural thread ---------- */
+.neural-thread {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.neural-hero {
+  z-index: 1;
+  view-timeline: --hero block;
+  background: transparent;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* the drawn logo fades while the thread lifts its nodes off it */
+    .neural-hero[data-mode="motion"] .neural-hero__canvas {
+      animation: hero-dissolve linear both;
+      animation-timeline: --hero;
+      animation-range: exit 0% exit 55%;
+    }
+  }
+}
+@keyframes hero-dissolve {
+  to {
+    opacity: 0.08;
+    filter: blur(2px);
+  }
+}
+.home-flow {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Home: "Képzeld el" pinned day ---------- */
+.imagine {
+  position: relative;
+  view-timeline: --imagine block;
+}
+.imagine__pin {
+  position: relative;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 6rem 1.25rem;
+  overflow: hidden;
+}
+.imagine__ghost {
+  position: absolute;
+  right: -2vw;
+  bottom: 4svh;
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(9rem, 30vw, 30rem);
+  font-weight: 600;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  -webkit-text-stroke: 1px rgb(223 226 232 / 9%);
+  pointer-events: none;
+  user-select: none;
+}
+.imagine__head {
+  position: relative;
+}
+.imagine__track {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+.imagine__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 21rem;
+  padding: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 100% 0%, rgb(47 155 255 / 10%), transparent 55%),
+    rgb(18 21 27 / 82%);
+  backdrop-filter: blur(6px);
+}
+.imagine__card--end {
+  justify-content: center;
+  border-color: rgb(47 155 255 / 35%);
+}
+.imagine__time {
+  color: var(--azure);
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  letter-spacing: -0.04em;
+}
+.imagine__index {
+  margin-top: auto;
+  padding-top: 2rem;
+  color: var(--mute);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+}
+.imagine__progress {
+  display: none;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not([data-motion="off"]) .imagine {
+      height: 460svh;
+    }
+    html:not([data-motion="off"]) .imagine__pin {
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100svh;
+      max-width: none;
+      padding-block: 5rem 3rem;
+      padding-inline: max(1.25rem, calc((100vw - 1440px) / 2 + 2.5rem));
+    }
+    html:not([data-motion="off"]) .imagine__track {
+      display: flex;
+      width: max-content;
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+      animation: imagine-x linear both;
+      animation-timeline: --imagine;
+      animation-range: contain 4% contain 96%;
+    }
+    html:not([data-motion="off"]) .imagine__card {
+      width: min(82vw, 27rem);
+    }
+    html:not([data-motion="off"]) .imagine__ghost {
+      animation: imagine-ghost linear both;
+      animation-timeline: --imagine;
+      animation-range: contain 0% contain 100%;
+    }
+    html:not([data-motion="off"]) .imagine__progress {
+      display: block;
+      position: relative;
+      height: 1px;
+      margin-top: 2.5rem;
+      background: var(--line);
+    }
+    html:not([data-motion="off"]) .imagine__progress span {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, var(--azure));
+      box-shadow: 0 0 12px rgb(47 155 255 / 60%);
+      transform-origin: left;
+      animation: grow-x linear both;
+      animation-timeline: --imagine;
+      animation-range: contain 4% contain 96%;
+    }
+  }
+}
+@keyframes imagine-x {
+  to {
+    transform: translateX(
+      calc(
+        -100% + 100vw - 2 * max(1.25rem, calc((100vw - 1440px) / 2 + 2.5rem))
+      )
+    );
+  }
+}
+@keyframes imagine-ghost {
+  from {
+    transform: translateX(20vw);
+  }
+  to {
+    transform: translateX(-35vw);
+  }
+}
+@media (min-width: 768px) {
+  .imagine__pin {
+    padding: 9rem 2.5rem;
+  }
+  .imagine__track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Home: idea → system ---------- */
+.idea__stage {
+  display: grid;
+  gap: 2.5rem;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .idea__stage {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .idea__map {
+    position: sticky;
+    top: 6rem;
+  }
+}
+.idea__console {
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgb(18 21 27 / 86%);
+  backdrop-filter: blur(6px);
+}
+.idea__field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+  border-bottom: 1px solid var(--line-strong);
+  transition: border-color 0.3s;
+}
+.idea__field:focus-within {
+  border-color: var(--azure);
+  box-shadow: 0 10px 24px -18px rgb(47 155 255 / 80%);
+}
+.idea__caret {
+  color: var(--azure);
+}
+.idea__field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.9rem 0;
+  background: transparent;
+  color: var(--ice);
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  outline: none;
+}
+.idea__field input::placeholder {
+  color: var(--mute);
+}
+.idea__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  animation: idea-in 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+.idea__dot {
+  width: 7px;
+  height: 7px;
+  margin-top: 0.5em;
+  border-radius: 50%;
+  background: var(--silver);
+  box-shadow: 0 0 0 3px rgb(223 226 232 / 8%);
+}
+.idea__item--next .idea__dot {
+  background: var(--azure);
+  box-shadow: 0 0 10px rgb(47 155 255 / 80%);
+}
+@keyframes idea-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.idea__map {
+  margin: 0;
+}
+.idea__map svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.idea-map__orbit {
+  stroke: var(--line);
+  stroke-dasharray: 2 6;
+}
+.idea-map__ring {
+  stroke: rgb(47 155 255 / 28%);
+  stroke-width: 1;
+}
+.idea-map__edge {
+  stroke: rgb(223 226 232 / 14%);
+  stroke-width: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0.82;
+  transition:
+    stroke-dashoffset 0.9s var(--ease-out),
+    stroke 0.6s;
+}
+.idea-map__module.is-on .idea-map__edge {
+  stroke: rgb(47 155 255 / 75%);
+  stroke-width: 1.4;
+  stroke-dashoffset: 0;
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.idea-map__module.is-next .idea-map__edge {
+  stroke: rgb(47 155 255 / 35%);
+  stroke-dasharray: 0.02 0.03;
+  stroke-dashoffset: 0;
+}
+.idea-map__pulse {
+  stroke: #fff;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.04 0.96;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgb(47 155 255 / 90%));
+}
+.idea-map__module.is-on .idea-map__pulse {
+  opacity: 1;
+  animation: idea-pulse 2.2s linear infinite;
+}
+@keyframes idea-pulse {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.idea-map__node {
+  fill: var(--obsidian);
+  stroke: var(--line-strong);
+  stroke-width: 1.5;
+  transition:
+    fill 0.5s,
+    stroke 0.5s;
+}
+.idea-map__halo {
+  fill: rgb(47 155 255 / 0%);
+  transition: fill 0.5s;
+}
+.idea-map__module.is-on .idea-map__node {
+  fill: var(--ice);
+  stroke: var(--azure);
+}
+.idea-map__module.is-on .idea-map__halo {
+  fill: rgb(47 155 255 / 18%);
+}
+.idea-map__module.is-next .idea-map__node {
+  stroke: var(--azure);
+}
+.idea-map__module.is-next .idea-map__halo {
+  animation: idea-breathe 2.4s ease-in-out infinite;
+}
+@keyframes idea-breathe {
+  50% {
+    fill: rgb(47 155 255 / 22%);
+  }
+}
+.idea-map__label {
+  fill: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: fill 0.4s;
+}
+.idea-map__module.is-on .idea-map__label {
+  fill: var(--ice);
+}
+.idea-map__module.is-next .idea-map__label {
+  fill: var(--azure);
+}
+.idea-map__core {
+  fill: var(--ice);
+  stroke: var(--azure);
+  stroke-width: 3;
+}
+.idea-map__core-glow {
+  animation: idea-breathe-core 3s ease-in-out infinite;
+  transform-origin: 320px 220px;
+}
+@keyframes idea-breathe-core {
+  50% {
+    transform: scale(1.18);
+    opacity: 0.7;
+  }
+}
+.idea-map__core-label {
+  fill: var(--azure);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+}
+@media (max-width: 639px) {
+  .idea-map__label {
+    font-size: 19px;
+    letter-spacing: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .idea-map__pulse,
+  .idea-map__module.is-next .idea-map__halo,
+  .idea-map__core-glow,
+  .idea__item {
+    animation: none;
+  }
+}
+html[data-motion="off"] .idea-map__pulse {
+  display: none;
+}
