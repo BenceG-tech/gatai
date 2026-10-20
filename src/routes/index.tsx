@@ -1,17 +1,40 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Hero3D } from "@/components/site/Hero3D";
+import { NeuralHero } from "@/components/hero/NeuralHero";
 import { AIShowcase } from "@/components/site/AIShowcase";
 import { Eyebrow, MagneticLink } from "@/components/site/ui";
 import { SelectedWork } from "@/components/site/SelectedWork";
-import { process, services } from "@/content/site";
+import { NeuralSphere } from "@/components/site/NeuralSphereSection";
+import { NodeIcon, SERVICE_ICONS } from "@/components/effects/NodeIcon";
+import { NeuralMesh } from "@/components/effects/NeuralMesh";
+import {
+  Counter,
+  Ink,
+  Marquee,
+  RevealWords,
+  SynapseDivider,
+} from "@/components/effects/MotionGraphics";
+import { useSpotlightGroup } from "@/hooks/use-pointer-effects";
+import { contact, process, services } from "@/content/site";
+import { publishedProjects } from "@/content/projects";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "GátAi studio — Ötletből működő valóság." },
-      { name: "description", content: "Gátai Bence független kreatív technológiai stúdiója: weboldalak, alkalmazások, AI-megoldások és üzleti rendszerek Budapestről." },
-      { property: "og:title", content: "GátAi studio — Ötletből működő valóság." },
-      { property: "og:description", content: "Design. Technology. Intelligence. Weboldalak, alkalmazások és intelligens rendszerek." },
+      {
+        name: "description",
+        content:
+          "Gátai Bence független digitális stúdiója: weboldalak, alkalmazások, AI-megoldások, automatizáció és üzleti rendszerek Budapestről.",
+      },
+      {
+        property: "og:title",
+        content: "GátAi studio — Ötletből működő valóság.",
+      },
+      {
+        property: "og:description",
+        content:
+          "Design. Technology. Intelligence. Weboldalak, alkalmazások és intelligens rendszerek.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -19,128 +42,310 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const section = "relative mx-auto max-w-[1440px] px-5 py-24 md:px-10 md:py-40";
+const MARQUEE = [
+  "Weboldalak",
+  "Alkalmazások",
+  "AI automatizáció",
+  "Üzleti rendszerek",
+  "Márka és design",
+  "Digitális stratégia",
+];
+
+function Services() {
+  const grid = useSpotlightGroup<HTMLUListElement>();
+  return (
+    <section className="section" aria-labelledby="services-title">
+      <div className="grid gap-8 md:grid-cols-12 md:items-end">
+        <div className="md:col-span-7">
+          <Eyebrow n="02">Képességek</Eyebrow>
+          <RevealWords
+            as="h2"
+            text={"Hat terület,\negy működő rendszer."}
+            id="services-title"
+            accent={["működő"]}
+            className="section-title mt-8"
+          />
+        </div>
+        <p className="reveal max-w-md text-muted-foreground md:col-span-4 md:col-start-9">
+          Stratégia, design és fejlesztés egy kézben — a weboldaltól az
+          AI-ügynökig minden ugyanarra a célra dolgozik: hogy a vállalkozásod
+          jobban működjön.
+        </p>
+      </div>
+      <ul
+        ref={grid}
+        className="spot-grid mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {services.map((s, i) => (
+          <li key={s.n} className="reveal">
+            <Link
+              to="/szolgaltatasok"
+              className="spot-card group"
+              data-spotlight
+            >
+              <div className="flex items-start justify-between">
+                <NodeIcon
+                  name={SERVICE_ICONS[i] ?? "web"}
+                  className="h-14 w-14"
+                />
+                <span className="eyebrow text-primary">{s.n}</span>
+              </div>
+              <h3 className="font-display mt-10 text-xl font-semibold md:text-2xl">
+                {s.hu}
+              </h3>
+              <p className="eyebrow mt-2 text-[0.65rem]">{s.title}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{s.text}</p>
+              <ul
+                className="mt-6 flex flex-wrap gap-1.5"
+                aria-label={`${s.hu}: részterületek`}
+              >
+                {s.items.map((item) => (
+                  <li key={item} className="tag">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <span className="spot-card__more" aria-hidden="true">
+                Részletek →
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function NeuralCore() {
+  const stats = [
+    { value: services.length, label: "szakterület egy kézben" },
+    { value: process.length, label: "lépés az ötlettől az élesítésig" },
+    { value: publishedProjects().length, label: "válogatott projekt" },
+    { value: 1, label: "felelős kapcsolattartó" },
+  ];
+  return (
+    <section className="section neural-core" aria-labelledby="core-title">
+      <div className="grid items-center gap-12 lg:grid-cols-12">
+        <div className="lg:col-span-6">
+          <Eyebrow n="03">Neurális mag</Eyebrow>
+          <RevealWords
+            as="h2"
+            text={"Rendszerek, amelyek\nhelyetted dolgoznak."}
+            id="core-title"
+            accent={["helyetted", "dolgoznak"]}
+            className="section-title mt-8"
+          />
+          <p className="reveal mt-8 max-w-lg text-muted-foreground">
+            AI-asszisztensek, dokumentumfeldolgozás és automatizált folyamatok,
+            amelyek a meglévő eszközeidhez kapcsolódnak. A gömb ugyanaz a háló,
+            amiből a logó felépül: minden csomópont egy lépés, minden impulzus
+            egy elvégzett feladat.
+          </p>
+          <dl className="stats mt-12">
+            {stats.map((s) => (
+              <div key={s.label} className="stats__item reveal">
+                <dt className="sr-only">{s.label}</dt>
+                <dd>
+                  <Counter value={s.value} className="stats__value" />
+                  <span className="stats__label" aria-hidden="true">
+                    {s.label}
+                  </span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div className="lg:col-span-6">
+          <NeuralSphere className="neural-sphere" />
+          <p className="eyebrow mt-4 text-center" aria-hidden="true">
+            Interaktív · vidd fölé az egeret
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Process() {
+  return (
+    <section className="section" aria-labelledby="process-title">
+      <Eyebrow n="06">Hogyan dolgozom</Eyebrow>
+      <RevealWords
+        as="h2"
+        text={"Öt lépés, egy\nfolyamatos impulzus."}
+        id="process-title"
+        accent={["impulzus"]}
+        className="section-title mt-8"
+      />
+      <ol className="process mt-16">
+        {process.map((p) => (
+          <li key={p.n} className="process__step">
+            <span className="process__node" aria-hidden="true" />
+            <span className="process__n font-mono">{p.n}</span>
+            <h3 className="font-display mt-4 text-lg font-semibold">{p.t}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
 
 function Home() {
   return (
     <>
-      <Hero3D />
-      <div className="relative z-10">
-        {/* The content follows the complete logo story. */}
-        <section id="studio-intro" className="signature-hero">
-          <div className="signature-hero__content">
-            <div>
-              <p className="signature-hero__intro">Gátai Bence független digitális stúdiója</p>
-              <h1 className="signature-hero__title">Ötletből.<br />Működő valóság.</h1>
+      <NeuralHero />
+      <div className="relative z-10 bg-background">
+        <section id="studio-intro" className="section intro">
+          <div className="grid gap-10 md:grid-cols-12 md:items-end">
+            <div className="md:col-span-7">
+              <Eyebrow n="01">Gátai Bence független digitális stúdiója</Eyebrow>
+              <RevealWords
+                as="h1"
+                text={"Ötletből.\nMűködő valóság."}
+                accent={["valóság"]}
+                className="display-title mt-8"
+              />
             </div>
-            <div className="signature-hero__offer">
-              <p>Weboldalakat, alkalmazásokat és intelligens rendszereket tervezek és építek — a vállalkozásod működésére szabva.</p>
-              <div className="mt-7 flex flex-wrap gap-3">
+            <div className="md:col-span-5">
+              <p className="reveal text-lg text-muted-foreground">
+                Weboldalakat, alkalmazásokat és intelligens rendszereket
+                tervezek és építek — a vállalkozásod működésére szabva.
+              </p>
+              <div className="reveal mt-8 flex flex-wrap gap-3">
                 <MagneticLink to="/kapcsolat">Projekt indítása</MagneticLink>
-                <MagneticLink to="/munkak" variant="ghost">Munkáim</MagneticLink>
+                <MagneticLink to="/munkak" variant="ghost">
+                  Munkáim
+                </MagneticLink>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Intro */}
-        <section className={`${section} scrim`} data-text>
-          <Eyebrow n="01">Amit létrehozok</Eyebrow>
-          <p className="reveal font-display mt-10 max-w-5xl text-3xl font-semibold leading-[1.1] md:text-6xl">
-            Nem csak jól kinéző weboldalakat építek. Digitális megoldásokat hozok létre, amelyek{" "}
-            <span className="text-muted-foreground">valódi értéket teremtenek.</span>
-          </p>
-          <p className="reveal mt-10 max-w-md text-muted-foreground">
-            Stratégiai gondolkodás, egyedi design és intelligens technológia — hogy a vállalkozásod kitűnjön és hatékonyabban működjön.
+          <p className="statement mt-24 md:mt-36">
+            <Ink>
+              Nem csak jól kinéző weboldalakat építek. Digitális megoldásokat
+              hozok létre, amelyek{" "}
+            </Ink>
+            <Ink tone="azure">valódi értéket teremtenek.</Ink>
           </p>
         </section>
 
-        {/* Selected work — sits over the GÁTAI letters beat */}
-        <SelectedWork />
+        <Marquee items={MARQUEE} />
+        <SynapseDivider label="02 — Képességek" />
+        <Services />
 
-        {/* Capabilities */}
-        <section className={`${section} scrim`} data-text>
-          <Eyebrow n="03">Képességek</Eyebrow>
-          <div className="mt-12 grid border-t md:grid-cols-3">
-            {services.map((s) => (
-              <Link key={s.n} to="/szolgaltatasok" className="group reveal border-b p-6 transition-colors hover:bg-card md:border-r md:p-10 md:[&:nth-child(3n)]:border-r-0">
-                <span className="eyebrow text-primary">{s.n}</span>
-                <h3 className="font-display mt-10 text-xl font-bold md:text-2xl">{s.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground">{s.text}</p>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <SynapseDivider label="03 — Neurális mag" pulses={3} />
+        <NeuralCore />
 
-        {/* AI — network beat */}
-        <section className={`${section} scrim`} data-text>
-          <Eyebrow n="04">AI & Automation</Eyebrow>
-          <h2 className="font-display reveal mt-8 mb-14 max-w-4xl text-4xl font-bold leading-[0.95] md:text-7xl">
-            Rendszerek, amelyek <span className="text-chrome">helyetted dolgoznak.</span>
+        <section className="section pt-0" aria-labelledby="ai-title">
+          <Eyebrow n="04">AI a gyakorlatban</Eyebrow>
+          <h2
+            id="ai-title"
+            className="section-title reveal mt-8 mb-14 max-w-4xl"
+          >
+            Kézi munka helyett{" "}
+            <span className="text-primary">automatikus folyamat.</span>
           </h2>
           <AIShowcase />
         </section>
 
-        {/* Process */}
-        <section className={`${section} scrim`} data-text>
-          <Eyebrow n="05">Hogyan dolgozom</Eyebrow>
-          <div className="mt-12 grid gap-px md:grid-cols-5">
-            {process.map((p) => (
-              <div key={p.n} className="reveal border-t pt-6 md:pr-6">
-                <span className="font-display text-5xl font-bold text-muted-foreground/40">{p.n}</span>
-                <h3 className="mt-6 text-lg font-semibold">{p.t}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{p.d}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <SynapseDivider label="05 — Munkák" />
+        <SelectedWork n="05" />
 
-        {/* Why + founder */}
-        <section className={`${section} scrim`} data-text>
+        <SynapseDivider label="06 — Folyamat" />
+        <Process />
+
+        <section className="section" aria-labelledby="founder-title">
           <div className="grid gap-16 md:grid-cols-12">
             <div className="md:col-span-5">
-              <div className="reveal sticky top-28 border-t pt-8">
+              <div className="reveal border-t pt-8 md:sticky md:top-28">
                 <p className="eyebrow">Stúdió-manifesztó</p>
-                <p className="font-display mt-8 text-[13vw] leading-[0.82] font-extrabold md:text-[6.5vw]">
-                  Egy<br />ember.<br /><span className="text-chrome">Teljes</span><br />felelősség<span className="text-primary">.</span>
+                <p className="font-display mt-8 text-[13vw] leading-[0.86] font-semibold tracking-tight md:text-[6vw]">
+                  Egy
+                  <br />
+                  ember.
+                  <br />
+                  <span className="text-chrome">Teljes</span>
+                  <br />
+                  felelősség<span className="text-primary">.</span>
                 </p>
-                <p className="mt-8 max-w-xs text-sm text-muted-foreground">Független stúdió Budapesten — stratégia, design és fejlesztés egy kézben.</p>
+                <p className="mt-8 max-w-xs text-sm text-muted-foreground">
+                  Független stúdió Budapesten — stratégia, design és fejlesztés
+                  egy kézben.
+                </p>
               </div>
             </div>
             <div className="md:col-span-6 md:col-start-7">
-              <Eyebrow n="06">Az alapító</Eyebrow>
-              <h2 className="font-display reveal mt-8 text-4xl font-bold leading-[0.95] md:text-6xl">
-                I build the brain behind the business.
-              </h2>
+              <Eyebrow n="07">Az alapító</Eyebrow>
+              <RevealWords
+                as="h2"
+                text="I build the brain behind the business."
+                id="founder-title"
+                accent={["brain"]}
+                className="section-title mt-8"
+              />
               <p className="reveal mt-8 text-muted-foreground">
-                Gátai Bence vagyok. Üzleti, marketing- és technológiai szemlélettel dolgozom: nem csak megtervezem, hogyan néz ki valami, hanem azt is, hogyan működik és mit hoz a vállalkozásnak.
+                Gátai Bence vagyok. Üzleti, marketing- és technológiai
+                szemlélettel dolgozom: nem csak megtervezem, hogyan néz ki
+                valami, hanem azt is, hogyan működik és mit hoz a
+                vállalkozásnak.
               </p>
               <ul className="mt-10 space-y-4 border-t pt-8">
                 {[
-                  ["Munka minősége", "Részletekig kidolgozott design és stabil technológia."],
+                  [
+                    "Munka minősége",
+                    "Részletekig kidolgozott design és stabil technológia.",
+                  ],
                   ["Gondolkodásmód", "Üzleti cél először, eszköz másodszor."],
-                  ["Személyes felelősség", "Egy kapcsolattartó, aki végig érti a projektet."],
+                  [
+                    "Személyes felelősség",
+                    "Egy kapcsolattartó, aki végig érti a projektet.",
+                  ],
                 ].map(([t, d]) => (
                   <li key={t} className="reveal grid grid-cols-3 gap-4 text-sm">
                     <span className="font-medium">{t}</span>
-                    <span className="col-span-2 text-muted-foreground">{d}</span>
+                    <span className="col-span-2 text-muted-foreground">
+                      {d}
+                    </span>
                   </li>
                 ))}
               </ul>
-              <div className="mt-10"><MagneticLink to="/rolam" variant="ghost">Bővebben rólam</MagneticLink></div>
+              <div className="mt-10">
+                <MagneticLink to="/rolam" variant="ghost">
+                  Bővebben rólam
+                </MagneticLink>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* CTA — final G beat */}
-        <section className={`${section} scrim text-center`} data-text>
-          <p className="eyebrow">Projektindítás</p>
-          <h2 className="font-display reveal mx-auto mt-8 max-w-5xl text-5xl font-extrabold leading-[0.9] md:text-8xl">
-            Építsünk valami <span className="text-primary">rendkívülit.</span>
-          </h2>
-          <div className="mt-12 flex flex-wrap justify-center gap-3">
-            <MagneticLink to="/kapcsolat">Beszéljünk a projektedről</MagneticLink>
-            <MagneticLink to="/szolgaltatasok" variant="ghost">Szolgáltatások</MagneticLink>
+        <section className="final-cta" aria-labelledby="cta-title">
+          <NeuralMesh
+            className="final-cta__mesh"
+            label="Neurális háló, amely a kurzorhoz kapcsolódik"
+          />
+          <div className="final-cta__inner">
+            <p className="eyebrow">Projektindítás</p>
+            <RevealWords
+              as="h2"
+              text={"Építsünk valami\nrendkívülit."}
+              id="cta-title"
+              accent={["rendkívülit"]}
+              className="display-title mx-auto mt-8 max-w-5xl"
+            />
+            <div className="mt-12 flex flex-wrap justify-center gap-3">
+              <MagneticLink to="/kapcsolat">
+                Beszéljünk a projektedről
+              </MagneticLink>
+              <MagneticLink to="/szolgaltatasok" variant="ghost">
+                Szolgáltatások
+              </MagneticLink>
+            </div>
+            <a
+              href={`mailto:${contact.email}`}
+              className="link-underline mt-10 inline-block font-mono text-sm text-muted-foreground"
+            >
+              {contact.email}
+            </a>
           </div>
         </section>
       </div>

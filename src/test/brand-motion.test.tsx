@@ -1,11 +1,25 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { Hero3D } from "@/components/site/Hero3D";
+import { NeuralHero } from "@/components/hero/NeuralHero";
+import { setMotionToggle } from "@/lib/motion";
 
-vi.mock("@/components/three/LiquidScene", () => ({ default: () => <div data-testid="logo-3d" /> }));
+const engine = {
+  setTarget: vi.fn(),
+  jumpTo: vi.fn(),
+  pointer: vi.fn(),
+  pointerLeave: vi.fn(),
+  setActive: vi.fn(),
+  resize: vi.fn(),
+  destroy: vi.fn(),
+  progress: 0,
+};
+const createNeuralLogo = vi.fn((..._args: unknown[]) => engine);
+vi.mock("@/components/hero/neural-logo-engine", () => ({
+  createNeuralLogo: (...args: unknown[]) => createNeuralLogo(...args),
+}));
 
-describe("scroll logo accessibility", () => {
+describe("neural hero accessibility", () => {
   let host: HTMLDivElement;
   let root: Root;
   let change: (() => void) | undefined;
@@ -14,12 +28,12 @@ describe("scroll logo accessibility", () => {
     observe() {}
     disconnect() {}
   };
+  const hero = () => host.querySelector(".neural-hero");
   beforeEach(() => {
     reduce = false;
+    createNeuralLogo.mockClear();
+    engine.destroy.mockClear();
     Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
-    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(
-      {} as WebGLRenderingContext,
-    );
     vi.stubGlobal("IntersectionObserver", observer);
     vi.stubGlobal("ResizeObserver", observer);
     vi.stubGlobal(
@@ -27,15 +41,16 @@ describe("scroll logo accessibility", () => {
       vi.fn(() => 1),
     );
     vi.stubGlobal("cancelAnimationFrame", vi.fn());
-    vi.stubGlobal("matchMedia", () => ({
+    vi.stubGlobal("matchMedia", (query: string) => ({
       get matches() {
-        return reduce;
+        return query.includes("reduce") ? reduce : false;
       },
       addEventListener: (_: string, handler: () => void) => {
         change = handler;
       },
       removeEventListener: vi.fn(),
     }));
+    setMotionToggle(true);
     host = document.createElement("div");
     document.body.append(host);
     root = createRoot(host);
@@ -44,34 +59,52 @@ describe("scroll logo accessibility", () => {
     await act(async () => root.unmount());
     host.remove();
     vi.unstubAllGlobals();
-    vi.restoreAllMocks();
   });
-  it("shows the approved complete logo without initializing WebGL for reduced motion", async () => {
+
+  it("shows the complete static logo without starting the animation for reduced motion", async () => {
     reduce = true;
-    await act(async () => root.render(<Hero3D />));
-    expect(HTMLCanvasElement.prototype.getContext).not.toHaveBeenCalled();
-    expect(host.querySelector(".logo-story")?.getAttribute("data-motion")).toBe("false");
-    expect(host.querySelector("img")?.getAttribute("src")).toBe("/brand/gatai-approved.svg");
+    await act(async () => root.render(<NeuralHero />));
+    expect(createNeuralLogo).not.toHaveBeenCalled();
+    expect(hero()?.getAttribute("data-motion")).toBe("false");
+    expect(host.querySelector("canvas")).toBeNull();
+    expect(
+      host.querySelector('.neural-hero__poster svg[role="img"]'),
+    ).not.toBeNull();
+    // The OS setting wins: no toggle is offered.
     expect(host.querySelector("button")).toBeNull();
   });
-  it("unmounts the scene immediately when reduced motion is enabled, and can restore it", async () => {
-    await act(async () => root.render(<Hero3D />));
-    expect(host.querySelector('[data-testid="logo-3d"]')).not.toBeNull();
+
+  it("stops the animation as soon as reduced motion is enabled, and can restore it", async () => {
+    await act(async () => root.render(<NeuralHero />));
+    expect(createNeuralLogo).toHaveBeenCalledTimes(1);
+    expect(host.querySelector("canvas")).not.toBeNull();
     reduce = true;
     await act(async () => change?.());
-    expect(host.querySelector('[data-testid="logo-3d"]')).toBeNull();
-    expect(host.querySelector("img")).not.toBeNull();
+    expect(engine.destroy).toHaveBeenCalled();
+    expect(host.querySelector("canvas")).toBeNull();
+    expect(host.querySelector(".neural-hero__poster")).not.toBeNull();
     reduce = false;
     await act(async () => change?.());
-    expect(host.querySelector('[data-testid="logo-3d"]')).not.toBeNull();
+    expect(host.querySelector("canvas")).not.toBeNull();
   });
+
   it("lets the visitor disable and re-enable motion without losing the logo or content link", async () => {
-    await act(async () => root.render(<Hero3D />));
+    await act(async () => root.render(<NeuralHero />));
     await act(async () => host.querySelector("button")!.click());
-    expect(host.querySelector(".logo-story")?.getAttribute("data-motion")).toBe("false");
+    expect(hero()?.getAttribute("data-motion")).toBe("false");
+    expect(document.documentElement.dataset["motion"]).toBe("off");
     expect(host.querySelector('a[href="#studio-intro"]')).not.toBeNull();
-    expect(host.querySelector("img")).not.toBeNull();
+    expect(host.querySelector(".neural-hero__poster svg")).not.toBeNull();
     await act(async () => host.querySelector("button")!.click());
-    expect(host.querySelector(".logo-story")?.getAttribute("data-motion")).toBe("true");
+    expect(hero()?.getAttribute("data-motion")).toBe("true");
+    expect(document.documentElement.dataset["motion"]).toBe("on");
+  });
+
+  it("keeps the canvas labelled for assistive technology", async () => {
+    await act(async () => root.render(<NeuralHero />));
+    const canvas = host.querySelector("canvas");
+    expect(canvas?.getAttribute("role")).toBe("img");
+    expect(canvas?.getAttribute("aria-label")).toMatch(/GátAi studio/);
+    expect(host.querySelectorAll("[data-chapter]")).toHaveLength(5);
   });
 });

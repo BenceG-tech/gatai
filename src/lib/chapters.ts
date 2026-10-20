@@ -1,4 +1,4 @@
-/** Story chapters on the home page: 0 whole logo, 1 separation, 2 AI focus, 3 reassembly, 4 whole logo. */
+/** Scroll chapters of the home hero; mapped onto the neural-logo timeline by `timelineFromChapter`. */
 export const CHAPTERS = [0, 1, 2, 3, 4] as const;
 
 /**
